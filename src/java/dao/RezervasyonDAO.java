@@ -499,7 +499,7 @@ public class RezervasyonDAO {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");  
         LocalDate months = LocalDate.now().minusMonths(1);
         String date1 = months.format(formatter);
-        LocalDateTime now = LocalDateTime.now(); 
+        LocalDateTime now = LocalDateTime.now().plusDays(1); ; 
         String date2 = now.format(formatter);
         try (Connection connection = getConnection();
             PreparedStatement statement = connection.prepareStatement(REZERVASYON_SELECT_COUNT);) {
