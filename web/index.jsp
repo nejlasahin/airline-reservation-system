@@ -65,11 +65,11 @@
                     </div>
                     <div class="search_panel">
                         <form action="rezervasyonsorgulama" id="search_form_3" class="search_panel_content d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
-                            <div class="search_item" style="margin-left: 100px;">
+                            <div class="search_item">
                                 <div>PNR Numaranız</div>
                                 <input type="text" name="pnr_no" id="pnr_no" class="search_input"  required="required">
                             </div>
-                            <div class="search_item" style="margin-right:200px;">
+                            <div class="search_item">
                                 <div>Soyadınız</div>
                                 <input type="text" name="yolcu_soyad" id="yolcu_soyad" class="search_input" required="required">
                             </div>
