@@ -70,8 +70,8 @@ public class RezervasyonDAO {
                                                 "JOIN havaalani_sehir AS s2 ON s2.havaalani_sehir_id=v.havaalani_sehir_id\n" +
                                                 "JOIN firma AS f ON f.firma_id=u.firma_id\n" +
                                                 "JOIN ucak AS p ON p.ucak_id=u.ucak_id\n" +
-                                                "WHERE r.kullanici_id=?\n;"+
-                                                "ORDER BY r.rezervasyon_tarih DESC";
+                                                "WHERE r.kullanici_id=?\n"+
+                                                "ORDER BY r.rezervasyon_tarih DESC;";
     private static final String IPTAL_DURUM1="update rezervasyon r\n" +
                                                 "join ucus u on r.ucus_id = u.ucus_id\n" +
                                                 "set r.durum = '1'\n" +
