@@ -17,7 +17,7 @@ public class RezervasyonDAO {
     private final String jdbcKullaniciname = "root";
     private final String jdbcPassword = "123456";    
     
-    private static final String TEKYON_SORGULAMA_SELECT="select distinct ucus_id,(ucak.ucak_koltuk-(SELECT COUNT(ucus_id) FROM rezervasyon WHERE ucus_id=ucus.ucus_id )) as bos_koltuk, a.havaalani_sehir_ad as kalkis_sehir, b.havaalani_sehir_ad as varis_sehir ,s.havaalani_ad as kalkis_ad,s.havaalani_kod as kalkis_kod, p.havaalani_ad as varis_ad, p.havaalani_kod as varis_kod, ucus_tarih, ucus_saat, ucus_sure, firma.firma_ad,firma.firma_logo , ucak.ucak_ad, ucus_ucret from ucus JOIN havaalani JOIN havaalani_sehir\n" +
+    private static final String TEKYON_SORGULAMA_SELECT1="select distinct ucus_id,(ucak.ucak_koltuk-(SELECT COUNT(ucus_id) FROM rezervasyon WHERE ucus_id=ucus.ucus_id )) as bos_koltuk, a.havaalani_sehir_ad as kalkis_sehir, b.havaalani_sehir_ad as varis_sehir ,s.havaalani_ad as kalkis_ad,s.havaalani_kod as kalkis_kod, p.havaalani_ad as varis_ad, p.havaalani_kod as varis_kod, ucus_tarih, ucus_saat, ucus_sure, firma.firma_ad,firma.firma_logo , ucak.ucak_ad, ucus_ucret from ucus JOIN havaalani JOIN havaalani_sehir\n" +
                                     "INNER JOIN  ucak ON (ucak.ucak_id = ucus.ucak_id)\n" +
                                     "INNER JOIN  firma ON (firma.firma_id = ucus.firma_id)\n" +
                                     "INNER JOIN  havaalani s ON (s.havaalani_id = ucus.ucus_kalkis_id)\n" +
@@ -25,6 +25,14 @@ public class RezervasyonDAO {
                                     "INNER JOIN  havaalani_sehir a ON (a.havaalani_sehir_id = s.havaalani_sehir_id)\n" +
                                     "INNER JOIN  havaalani_sehir b ON (b.havaalani_sehir_id = p.havaalani_sehir_id)\n" +
                                     "WHERE s.havaalani_id = ? AND p.havaalani_id =? AND ucus_tarih=? AND (ucak.ucak_koltuk-(SELECT COUNT(ucus_id) FROM rezervasyon WHERE ucus_id=ucus.ucus_id )) >= ?;";
+    private static final String TEKYON_SORGULAMA_SELECT2="select distinct ucus_id,(ucak.ucak_koltuk-(SELECT COUNT(ucus_id) FROM rezervasyon WHERE ucus_id=ucus.ucus_id )) as bos_koltuk, a.havaalani_sehir_ad as kalkis_sehir, b.havaalani_sehir_ad as varis_sehir ,s.havaalani_ad as kalkis_ad,s.havaalani_kod as kalkis_kod, p.havaalani_ad as varis_ad, p.havaalani_kod as varis_kod, ucus_tarih, ucus_saat, ucus_sure, firma.firma_ad,firma.firma_logo , ucak.ucak_ad, ucus_ucret from ucus JOIN havaalani JOIN havaalani_sehir\n" +
+                                    "INNER JOIN  ucak ON (ucak.ucak_id = ucus.ucak_id)\n" +
+                                    "INNER JOIN  firma ON (firma.firma_id = ucus.firma_id)\n" +
+                                    "INNER JOIN  havaalani s ON (s.havaalani_id = ucus.ucus_kalkis_id)\n" +
+                                    "INNER JOIN  havaalani p ON (p.havaalani_id = ucus.ucus_varis_id)\n" +
+                                    "INNER JOIN  havaalani_sehir a ON (a.havaalani_sehir_id = s.havaalani_sehir_id)\n" +
+                                    "INNER JOIN  havaalani_sehir b ON (b.havaalani_sehir_id = p.havaalani_sehir_id)\n" +
+                                    "WHERE s.havaalani_id = ? AND p.havaalani_id =? AND ucus_tarih=? AND ucus_saat > ? AND (ucak.ucak_koltuk-(SELECT COUNT(ucus_id) FROM rezervasyon WHERE ucus_id=ucus.ucus_id )) >= ?;";
     private static final String REZERVASYON_SELECT_COUNT="SELECT COUNT(*) as sonuc FROM rezervasyon WHERE rezervasyon_tarih BETWEEN ? AND ?;";
     private static final String UCUS_SELECT_COUNT="SELECT count(*) as sonuc FROM ucus WHERE ucus_tarih >= ? ;";
     private static final String MESAJ_SELECT_COUNT="SELECT count(*) as sonuc FROM mesaj WHERE mesaj_okunma = 0;";
@@ -296,11 +304,11 @@ public class RezervasyonDAO {
     } 
     
     public List<Rezervasyon> tekyonsorgulama(Rezervasyon rezervasyon) {
-        List<Rezervasyon> rez = new ArrayList<> ();
+        List<Rezervasyon> rez = new ArrayList<>();
         DateTimeFormatter timeformatter = DateTimeFormatter.ofPattern("HH:mm");
-        LocalDateTime now = LocalDateTime.now(); 
+        LocalDateTime now = LocalDateTime.now();
         String sss = now.format(timeformatter);
-        
+
         String[] ARRAYsaat = sss.split(":");
         String h = ARRAYsaat[0];
         String m = ARRAYsaat[1];
@@ -318,59 +326,118 @@ public class RezervasyonDAO {
         } else {
             Sssaat = String.valueOf(hh + 1);
         }
-        String u_saat = Sssaat + ":" + Ssdakika;  
-        try (Connection connection = getConnection();
-            PreparedStatement statement = connection.prepareStatement(TEKYON_SORGULAMA_SELECT);) {
-            statement.setInt(1, rezervasyon.getHavaalani_kalkis_id());
-            statement.setInt(2, rezervasyon.getHavaalani_varis_id()); 
-            statement.setString(3, rezervasyon.getUcus_tarih());
-            statement.setInt(4, (rezervasyon.getCocuk_sayi()+rezervasyon.getYetiskin_sayi())); 
-            ResultSet rs = statement.executeQuery();
-            
-            while (rs.next()) {
-                int ucus_id = rs.getInt("ucus_id");
-                String kalkis_sehir=rs.getString("kalkis_sehir");
-                String kalkis_ad=rs.getString("kalkis_ad");
-                String kalkis_kod=rs.getString("kalkis_kod");
-                String varis_sehir=rs.getString("varis_sehir");
-                String varis_ad=rs.getString("varis_ad");
-                String varis_kod=rs.getString("varis_kod");
-                String ucus_saat=rs.getString("ucus_saat");
-                ucus_saat=ucus_saat.substring(0, 5);
-                String ucus_tarih=rs.getString("ucus_tarih");
-                String ucus_sure=rs.getString("ucus_sure");
-                
-                String[] ARRAYucus_sure = ucus_sure.split(":"); 
-                String ucus_s = ARRAYucus_sure[0];
-                String ucus_d = ARRAYucus_sure[1];
-                String[] ARRAYucus_saat = ucus_saat.split(":");
-                String s = ARRAYucus_saat[0];
-                String d = ARRAYucus_saat[1];
-                int saat=(Integer.parseInt(s)+Integer.parseInt(ucus_s))%24 ;
-                int dakika=(Integer.parseInt(d)+Integer.parseInt(ucus_d))%60 ;
-                String Sdakika;
-                if(dakika < 10){
-                    Sdakika="0"+String.valueOf(dakika);
-                }else{                                    
-                    Sdakika=String.valueOf(dakika);
+        String u_saat = Sssaat + ":" + Ssdakika;
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate date = LocalDate.now();
+        String date1 = date.format(formatter);
+        if (rezervasyon.getUcus_tarih().equals(date1)) {
+            try (Connection connection = getConnection();
+                    PreparedStatement statement = connection.prepareStatement(TEKYON_SORGULAMA_SELECT2);) {
+                statement.setInt(1, rezervasyon.getHavaalani_kalkis_id());
+                statement.setInt(2, rezervasyon.getHavaalani_varis_id());
+                statement.setString(3, rezervasyon.getUcus_tarih());
+                statement.setString(4, u_saat);
+                statement.setInt(5, (rezervasyon.getCocuk_sayi() + rezervasyon.getYetiskin_sayi()));
+                ResultSet rs = statement.executeQuery();
+
+                while (rs.next()) {
+                    int ucus_id = rs.getInt("ucus_id");
+                    String kalkis_sehir = rs.getString("kalkis_sehir");
+                    String kalkis_ad = rs.getString("kalkis_ad");
+                    String kalkis_kod = rs.getString("kalkis_kod");
+                    String varis_sehir = rs.getString("varis_sehir");
+                    String varis_ad = rs.getString("varis_ad");
+                    String varis_kod = rs.getString("varis_kod");
+                    String ucus_saat = rs.getString("ucus_saat");
+                    ucus_saat = ucus_saat.substring(0, 5);
+                    String ucus_tarih = rs.getString("ucus_tarih");
+                    String ucus_sure = rs.getString("ucus_sure");
+
+                    String[] ARRAYucus_sure = ucus_sure.split(":");
+                    String ucus_s = ARRAYucus_sure[0];
+                    String ucus_d = ARRAYucus_sure[1];
+                    String[] ARRAYucus_saat = ucus_saat.split(":");
+                    String s = ARRAYucus_saat[0];
+                    String d = ARRAYucus_saat[1];
+                    int saat = (Integer.parseInt(s) + Integer.parseInt(ucus_s)) % 24;
+                    int dakika = (Integer.parseInt(d) + Integer.parseInt(ucus_d)) % 60;
+                    String Sdakika;
+                    if (dakika < 10) {
+                        Sdakika = "0" + String.valueOf(dakika);
+                    } else {
+                        Sdakika = String.valueOf(dakika);
+                    }
+                    String Ssaat;
+                    if (saat < 10) {
+                        Ssaat = "0" + String.valueOf(saat);
+                    } else {
+                        Ssaat = String.valueOf(saat);
+                    }
+                    String varis_saat = Ssaat + ":" + Sdakika;
+                    String firma_ad = rs.getString("firma_ad");
+                    String firma_logo = rs.getString("firma_logo");
+                    Double ucus_ucret = rs.getDouble("ucus_ucret");
+                    rez.add(new Rezervasyon(ucus_tarih, ucus_id, kalkis_sehir, kalkis_ad, kalkis_kod, varis_sehir, varis_ad, varis_kod, ucus_saat, ucus_sure, firma_ad, firma_logo, ucus_ucret, ucus_s, ucus_d, varis_saat));
                 }
-                String Ssaat;
-                if(saat < 10){
-                    Ssaat="0"+String.valueOf(saat);
-                }else{                                    
-                    Ssaat=String.valueOf(saat);
-                }
-                String varis_saat = Ssaat+":"+Sdakika;
-                String firma_ad=rs.getString("firma_ad");
-                String firma_logo=rs.getString("firma_logo");
-                Double ucus_ucret=rs.getDouble("ucus_ucret");              
-                rez.add(new Rezervasyon(ucus_tarih,ucus_id, kalkis_sehir,kalkis_ad,kalkis_kod,varis_sehir,varis_ad,varis_kod,ucus_saat,ucus_sure,firma_ad,firma_logo,ucus_ucret, ucus_s, ucus_d, varis_saat));
+            } catch (SQLException e) {
+                printSQLException(e);
             }
-        } catch (SQLException e) {
-            printSQLException(e);
+            return rez;
+        } else {
+            try (Connection connection = getConnection();
+                    PreparedStatement statement = connection.prepareStatement(TEKYON_SORGULAMA_SELECT1);) {
+                statement.setInt(1, rezervasyon.getHavaalani_kalkis_id());
+                statement.setInt(2, rezervasyon.getHavaalani_varis_id());
+                statement.setString(3, rezervasyon.getUcus_tarih());
+                statement.setInt(4, (rezervasyon.getCocuk_sayi() + rezervasyon.getYetiskin_sayi()));
+                ResultSet rs = statement.executeQuery();
+
+                while (rs.next()) {
+                    int ucus_id = rs.getInt("ucus_id");
+                    String kalkis_sehir = rs.getString("kalkis_sehir");
+                    String kalkis_ad = rs.getString("kalkis_ad");
+                    String kalkis_kod = rs.getString("kalkis_kod");
+                    String varis_sehir = rs.getString("varis_sehir");
+                    String varis_ad = rs.getString("varis_ad");
+                    String varis_kod = rs.getString("varis_kod");
+                    String ucus_saat = rs.getString("ucus_saat");
+                    ucus_saat = ucus_saat.substring(0, 5);
+                    String ucus_tarih = rs.getString("ucus_tarih");
+                    String ucus_sure = rs.getString("ucus_sure");
+
+                    String[] ARRAYucus_sure = ucus_sure.split(":");
+                    String ucus_s = ARRAYucus_sure[0];
+                    String ucus_d = ARRAYucus_sure[1];
+                    String[] ARRAYucus_saat = ucus_saat.split(":");
+                    String s = ARRAYucus_saat[0];
+                    String d = ARRAYucus_saat[1];
+                    int saat = (Integer.parseInt(s) + Integer.parseInt(ucus_s)) % 24;
+                    int dakika = (Integer.parseInt(d) + Integer.parseInt(ucus_d)) % 60;
+                    String Sdakika;
+                    if (dakika < 10) {
+                        Sdakika = "0" + String.valueOf(dakika);
+                    } else {
+                        Sdakika = String.valueOf(dakika);
+                    }
+                    String Ssaat;
+                    if (saat < 10) {
+                        Ssaat = "0" + String.valueOf(saat);
+                    } else {
+                        Ssaat = String.valueOf(saat);
+                    }
+                    String varis_saat = Ssaat + ":" + Sdakika;
+                    String firma_ad = rs.getString("firma_ad");
+                    String firma_logo = rs.getString("firma_logo");
+                    Double ucus_ucret = rs.getDouble("ucus_ucret");
+                    rez.add(new Rezervasyon(ucus_tarih, ucus_id, kalkis_sehir, kalkis_ad, kalkis_kod, varis_sehir, varis_ad, varis_kod, ucus_saat, ucus_sure, firma_ad, firma_logo, ucus_ucret, ucus_s, ucus_d, varis_saat));
+                }
+            } catch (SQLException e) {
+                printSQLException(e);
+            }
+            return rez;
         }
-        return rez;
-    } 
+    }
     
     public Rezervasyon ucusbilgileri(int id) {
         Rezervasyon rez=null;
@@ -499,7 +566,7 @@ public class RezervasyonDAO {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");  
         LocalDate months = LocalDate.now().minusMonths(1);
         String date1 = months.format(formatter);
-        LocalDateTime now = LocalDateTime.now().plusDays(1); ; 
+        LocalDateTime now = LocalDateTime.now().plusDays(1); 
         String date2 = now.format(formatter);
         try (Connection connection = getConnection();
             PreparedStatement statement = connection.prepareStatement(REZERVASYON_SELECT_COUNT);) {
