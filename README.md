@@ -1,5 +1,5 @@
 <p align="center">
- <img src="https://github.com/nejlasahin/ucak_rezervasyon_sistemi/blob/master/web/assets/images/logo.png" align="center" alt="GitHub Readme" />
+ <img width="240px" height="40px" src="https://github.com/nejlasahin/ucak_rezervasyon_sistemi/blob/master/web/assets/images/logo.png" align="center" alt="GitHub Readme" />
  <h2 align="center">Uçak Rezervasyon Sistemi</h2>
  <p align="center">Bu proje İnternet Mühendisliği dersinde almış olduğum proje ödevim için hazırlanmıştır.</p>
 </p>
