@@ -2,9 +2,10 @@
 Bu proje İnternet Mühendisliği dersinde almış olduğum proje ödevim için hazırlanmıştır. 
 
 ### Anasayfa
-![plot](./README/anasayfa.jpg)
+![](./README/anasayfa.jpg)
 
 ### Admin
+![](./README/admin.jpg)
 
 ### Gerekli Kütüphaneler
-![plot](./README/kutuphaneler.JPG)
+![](./README/kutuphaneler.JPG)
