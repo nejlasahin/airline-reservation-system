@@ -72,7 +72,7 @@ DAO bu güncellemeyi veri üzerine yansıttıktan sonra tekrardan Controller bu 
 
 ## Oluşturulan Sınıflar ve Açıklaması
 
-# Cevap
+### Cevap
 
 ![](./README/cevap.JPG)
 
@@ -84,7 +84,7 @@ Gerçekleşen İşlemler; cevapların listelenmesi, cevapların incelenmesi,  ge
 
 - **CevapServlet.java :** JSP sayfası ile Model - DAO sınıfı arasında bağlantı kurar. Kullanıcıdan gelen mesaj cevaplama, cevapları listeleme, cevap silme veya cevap inceleme işlemlerinden kullanıcının isteğine göre hangi işlemin yapılacağını ve kullanıcıya hangi JSP sayfasının döneceğini belirtir.
 
-# Firma 
+### Firma 
 
 ![](./README/firma.JPG)
 
@@ -96,7 +96,7 @@ Gerçekleşen İşlemler; firmaların listelenmesi, firma eklenmesi,  firmanın 
 
 - **FirmaServlet.java :** JSP sayfası ile Model - DAO sınıfı arasında bağlantı kurar. Kullanıcıdan gelen firmaları listeleme, yeni firma oluşturma, firma güncelleme, firma silme işlemlerinden kullanıcının isteğine göre hangi işlemin yapılacağını ve kullanıcıya hangi JSP sayfasının döneceğini belirtir.
 
-# Havaalanı
+### Havaalanı
 
 ![](./README/havaalani.JPG)
 
@@ -108,7 +108,7 @@ Gerçekleşen İşlemler; havaalanlarının listelenmesi, havaalanı eklenmesi, 
 
 - **HavaalaniServlet.java :** JSP sayfası ile Model - DAO sınıfı arasında bağlantı kurar. Kullanıcıdan gelen havaalanları listeleme, yeni havaalanı oluşturma, havaaalanı güncelleme, havaalanı silme işlemlerinden kullanıcının isteğine göre hangi işlemin yapılacağını ve kullanıcıya hangi JSP sayfasının döneceğini belirtir.
 
-# Havaalanı Şehir
+### Havaalanı Şehir
 
 ![](./README/havaalani_sehir.JPG)
 
@@ -120,7 +120,7 @@ Gerçekleşen İşlemler; şehirlerin listelenmesi, şehir eklenmesi, şehir bil
 
 - **Havaalani_sehirServlet.java :** JSP sayfası ile Model - DAO sınıfı arasında bağlantı kurar. Kullanıcıdan gelen şehirleri listeleme, yeni şehir oluşturma, şehir güncelleme, şehir silme işlemlerinden kullanıcının isteğine göre hangi işlemin yapılacağını ve kullanıcıya hangi JSP sayfasının döneceğini belirtir.
 
-# Havaalanı Ülke
+### Havaalanı Ülke
 
 ![](./README/havaalani_ulke.JPG)
 
@@ -132,7 +132,7 @@ Gerçekleşen İşlemler; ülkelerin listelenmesi, ülke eklenmesi, ülke bilgil
 
 - **Havaalani_ulkeServlet.java :** JSP sayfası ile Model - DAO sınıfı arasında bağlantı kurar. Kullanıcıdan gelen ülkeleri listeleme, yeni ülke oluşturma, ülke güncelleme, ülke silme işlemlerinden kullanıcının isteğine göre hangi işlemin yapılacağını ve kullanıcıya hangi JSP sayfasının döneceğini belirtir.
 
-# Kullanıcılar
+### Kullanıcılar
 
 ![](./README/kullanicilar.JPG)
 
@@ -143,3 +143,72 @@ Gerçekleşen İşlemler; ülkelerin listelenmesi, ülke eklenmesi, ülke bilgil
 Gerçekleşen İşlemler; kullanıcıların listelenmesi, sisteme giriş yaparken şifrenin kontrol edilmesi, unutulan şifrenin veritabanından çekilmesi, kullanıcı bilgilerinin güncellenmesi, yeni kullanıcı / admin oluşturulması, kullanıcının / adminin veritabanından silinmesi. 
 
 - **KullaniciServlet.java :** JSP sayfası ile Model - DAO sınıfı arasında bağlantı kurar. Kullanıcıdan gelen üye olma, sisteme giriş yapma, yeni şifre talebi,  sistemden çıkış yapma, kullanıcıların listelenmesi, kullanıcıların silinmesi, kullanıcı/admin bilgilerinin güncellenmesi işlemlerinden kullanıcının isteğine göre hangi işlemin yapılacağını ve kullanıcıya hangi JSP sayfasının döneceğini belirtir.
+
+### Mesaj
+
+![](./README/mesaj.JPG)
+
+- **Mesaj.java :** Mesaj tablosunun modelini oluşturmaktadır.
+İçerisinde tablodaki niteliklerin değişken olarak oluşturmuş hali , bu değişkenlerin getter setter metotları ve yapılandırıcı metotlar bulunmaktadır.
+
+- **MesajDAO.java :** Mesaj tablosunun veri erişim sınıfıdır.
+Gerçekleşen İşlemler; gelen mesajların veritabanına kaydedilmesi, gelen mesajların listelenmesi, mesaj okunmuşsa okundu bilgisinin güncellenmesi, mesaja cevap verilmişse cevap bilgisinin güncellenmesi, mesajın veritabanından silinmesi.
+
+- **MesajServlet.java :** JSP sayfası ile Model - DAO sınıfı arasında bağlantı kurar. Kullanıcıdan gelen mesajları listeleme,  gelen mesajın silinmesi, gelen mesajın veritabanına eklenmesi, iletişim sayfasına erişim sağlanması işlemlerinden kullanıcının isteğine göre hangi işlemin yapılacağını ve kullanıcıya hangi JSP sayfasının döneceğini belirtir.
+
+### Rezervasyon
+
+![](./README/rezervasyon.JPG)
+
+- **Rezervasyon.java :** Rezervasyon tablosunun modelini oluşturmaktadır.
+İçerisinde tablodaki niteliklerin değişken olarak oluşturmuş hali , bu değişkenlerin getter setter metotları ve yapılandırıcı metotlar bulunmaktadır.
+
+- **RezervasyonDAO.java :** Rezervasyon tablosunun veri erişim sınıfıdır.
+Gerçekleşen İşlemler; kullanıcıdan alınan bilgilere göre uçuş listelenmesi, uçuştan 2 saat  önceye kadar iptal yada bilgi güncellemesi yapabilme işlemi, seçilen koltuğun dolu-boş olmasının kontrolü, veritabanına rezervasyon bilgilerinin eklenmesi, rezervasyon bilgilerinin güncellenmesi, seçilen uçuş bilgilerine erişim.
+
+- **RezervasyonServlet.java :** JSP sayfası ile Model - DAO sınıfı arasında bağlantı kurar. Uçuş sorgulama, rezervasyon listelenmesi, rezervasyonun iptal edilmesi, rezervasyon sorgulaması, rezervasyon oluşturulması, rezervasyon bilgilerinin güncellenmesi işlemlerinden kullanıcının isteğine göre hangi işlemin yapılacağını ve kullanıcıya hangi JSP sayfasının döneceğini belirtir.
+
+### Uçak
+
+![](./README/ucak.JPG)
+
+- **Ucak.java :** Ucak tablosunun modelini oluşturmaktadır.
+İçerisinde tablodaki niteliklerin değişken olarak oluşturmuş hali , bu değişkenlerin getter setter metotları ve yapılandırıcı metotlar bulunmaktadır.
+
+- **:UcakDAO.java :** Ucak tablosunun veri erişim sınıfıdır.
+Gerçekleşen İşlemler; uçakların listelenmesi, seçilen uçağın silinmesi, veritabanına uçak eklenmesi, uçak bilgilerinin güncellenmesi. 
+
+- **UcakServlet.java :** JSP sayfası ile Model - DAO sınıfı arasında bağlantı kurar. Kullanıcıdan gelen uçakları listeleme, yeni uçak bilgileri oluşturma, uçak bilgileri güncelleme, uçak silme işlemlerinden kullanıcının isteğine göre hangi işlemin yapılacağını ve kullanıcıya hangi JSP sayfasının döneceğini belirtir.
+
+### Uçuş
+
+![](./README/ucus.JPG)
+
+- **Ucus.java :** Ucus tablosunun modelini oluşturmaktadır.
+İçerisinde tablodaki niteliklerin değişkenlerin getter setter metotları ve yapılandırıcı metotlar bulunmaktadır.
+
+- **:UcusDAO.java :** Ucus tablosunun veri erişim sınıfıdır.
+Gerçekleşen İşlemler; güncel ve geçmiş uçuşların listelenmesi, seçilen uçuşun silinmesi, seçilen uçağın müsaitlik durumuna göre veritabanına uçuş eklenmesi, uçuş bilgilerinin güncellenmesi. 
+
+- **UcusServlet.java :** JSP sayfası ile Model - DAO sınıfı arasında bağlantı kurar. Kullanıcıdan gelen güncel veya geçmiş uçuşların listelenmesi, uçağın müsaitlik durumuna göre yeni uçuş bilgileri oluşturma, uçuş bilgilerinin güncelleme, oluşturulan uçuşu silme işlemlerinden kullanıcının isteğine göre hangi işlemin yapılacağını ve kullanıcıya hangi JSP sayfasının döneceğini belirtir.
+
+### Anasayfa
+
+`Kullanıcı Anasayfası`
+
+![](./README/anasayfa1.png)
+
+`Admin Anasayfası`
+
+![](./README/admin2.JPG)
+
+- **AnasayfalarServlet.java :** JSP sayfası ile Model - DAO sınıfı arasında bağlantı kurar. 
+Kullanıcıdan gelen anasayfa görüntüleme işleminde eğer görüntülenmek istenen sayfa admin anasayfası ise veritabanından aylık rezervasyon sayısı, planlanan uçuşlar ve okunmamış mesajların sayısı çekilecektir ve kullanıcıya JSP sayfası olarak admin anasayfası dönecektir.
+Kullanıcıdan gelen anasayfa görüntüleme işleminde eğer görüntülenmek istenen sayfa kullanıcı anasayfası ise veritabanında kayıtlı havayolları çekilecektir gidiş ve varış yeri olarak kullanıcıda görüntülenecektir  ve kullanıcıya JSP sayfası olarak kullanıcı anasayfası dönecektir.
+
+---
+
+## Kod Parçaları & Ekran Görüntüleri
+
+
+
