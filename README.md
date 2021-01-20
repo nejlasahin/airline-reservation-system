@@ -210,7 +210,7 @@ Kullanıcıdan gelen anasayfa görüntüleme işleminde eğer görüntülenmek i
 
 ## Kod Parçaları & Ekran Görüntüleri
 
-# Giriş Yapma
+### Giriş Yapma
 
 ```java
 private void gostergiris(HttpServletRequest request, HttpServletResponse response)
@@ -244,4 +244,14 @@ private void gostergiris(HttpServletRequest request, HttpServletResponse respons
         }
     }
 ```
+
+Aşağıdaki kod satırı ile 
+`Boolean kontrol = kullaniciDAO.uyegiriskontrol(kullanici_email, kullanici_sifre);`
+giriş yapmak isteyen kullanıcının sistemde kayıtlı olup olmadığını kontrol ediyoruz. 
+Eğer kullanıcı sistemde kayıtlıysa aşağıdaki işlem ile
+`kullaniciDAO.uyegiris(kullanici_email, kullanici_sifre);`
+kullanıcının bilgilerini veritabanından çekip bu bilgiler ile `setAttribute ` işlemini gerçekleştiriyoruz.
+Eğer sistemde kayıtlı olmayan bir kullanıcı ise Giriş başarısız hatası verecektir.
+
+![](./README/giris-yapma.JPG)
 
