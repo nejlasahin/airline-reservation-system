@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://github.com/nejlasahin/ucak_rezervasyon_sistemi/blob/master/web/assets/images/logo.png">
+</p>
+
 # Uçak Rezervasyon Sistemi
 Bu proje İnternet Mühendisliği dersinde almış olduğum proje ödevim için hazırlanmıştır. 
 
@@ -246,12 +250,453 @@ private void gostergiris(HttpServletRequest request, HttpServletResponse respons
 ```
 
 Aşağıdaki kod satırı ile 
+
 `Boolean kontrol = kullaniciDAO.uyegiriskontrol(kullanici_email, kullanici_sifre);`
+
 giriş yapmak isteyen kullanıcının sistemde kayıtlı olup olmadığını kontrol ediyoruz. 
+
 Eğer kullanıcı sistemde kayıtlıysa aşağıdaki işlem ile
+
 `kullaniciDAO.uyegiris(kullanici_email, kullanici_sifre);`
+
 kullanıcının bilgilerini veritabanından çekip bu bilgiler ile `setAttribute ` işlemini gerçekleştiriyoruz.
+
 Eğer sistemde kayıtlı olmayan bir kullanıcı ise Giriş başarısız hatası verecektir.
 
 ![](./README/giris-yapma.JPG)
 
+### Çıkış Yapma
+
+```java
+private void uyecikis(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException {
+
+        HttpSession session = request.getSession();
+        session.invalidate();
+        response.sendRedirect("ucakbileti");
+        }
+```
+
+Aşağıdaki kod satırı ile 
+
+`session.invalidate();`
+
+oturum işlemini sonlandırıyoruz.
+
+`Admin Panelinde Çıkış`
+
+![](./README/cikis1.JPG)
+
+`Kullanıcı Ekranından Çıkış`
+
+![](./README/cikis2.JPG)
+
+`response.sendRedirect("ucakbileti");` Çıkış işlem gerçekleştikten sonra anasayfaya yönlendiriliyor.
+
+### Üye Olma
+
+```java
+private void gosteruyeol(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException {
+        HttpSession session = request.getSession();
+        if ((Integer) session.getAttribute("kullanici_yetki") == null) {
+            String kullanici_ad = request.getParameter("kullanici_ad");
+            String kullanici_soyad = request.getParameter("kullanici_soyad");
+            String kullanici_email = request.getParameter("kullanici_email");
+            String kullanici_sifre = request.getParameter("kullanici_sifre1");
+            Boolean kontrol = kullaniciDAO.uyekontrol(kullanici_email);
+            if (kontrol == true) {
+                Kullanici yeniKullanici = new Kullanici(kullanici_ad, kullanici_soyad, kullanici_email, kullanici_sifre);
+                kullaniciDAO.uyeol(yeniKullanici);
+                response.sendRedirect("uyeol?durum=basarili");
+            } else {
+                response.sendRedirect("uyeol?durum=basarisiz");
+            }
+        } else {
+            response.sendRedirect("ucakbileti");
+        }
+    }
+```
+
+Aşağıdaki kod satırı ile
+
+`Boolean kontrol = kullaniciDAO.uyekontrol(kullanici_email);`
+
+üye olmak isteyen kullanıcının email adresinin sistemde kayıtlı olup olmadığını kontrol ediyoruz. Eğer email adresi sistemde kayıtlı değilse aşağıdaki işlem ile
+
+`kullaniciDAO.uyeol(yeniKullanici);`
+
+yeni kullanıcıyı veritabanına ekliyoruz.
+
+Eğer sistemde kayıtlı bir email adresi kullanarak üye olmaya çalışır ise Bu Email kullanılıyor.  hatası verecektir.
+
+![](./READMEuye.JPG)
+
+### Mesaj Durum - Mesaj Cevap
+
+![](./README/mesaj1.JPG)
+
+1. :eye_in_speech_bubble:  mesajın okunup okunmadığı ile ilgidir. Göz ikonunun üstünde slash işareti varsa henüz mesajın okunmadığı anlamına gelir.
+
+2. :x: mesaja cevap verilip verilmediğini belirtir. Çarpı işareti varsa henüz mesaja cevap verilmediği anlamına gelir.
+
+Okunmuş ve cevap verilmiş görünümü
+
+![](./README/mesaj2.JPG)
+
+Mesaja cevap verme işlemi ise
+
+```java
+private void gostermesajcevapla(HttpServletRequest request, HttpServletResponse response)
+    throws SQLException, IOException {
+        HttpSession sessionn = request.getSession();
+        if ((Integer) sessionn.getAttribute("kullanici_yetki") == null) {
+            response.sendRedirect("giris");
+        }else if((Integer) sessionn.getAttribute("kullanici_yetki") != 2){
+            response.sendRedirect("../ucakbileti");
+        }else{
+            int mesaj_id = Integer.parseInt(request.getParameter("mesaj_id"));
+            String mesaj_email = request.getParameter("mesaj_email");
+            String cevap_baslik = new String((request.getParameter("cevap_baslik")).getBytes("ISO-8859-1"), "UTF-8");
+            String cevap_icerik = new String((request.getParameter("cevap_icerik")).getBytes("ISO-8859-1"), "UTF-8");
+            Cevap yenicevap = new Cevap(mesaj_id,cevap_icerik,cevap_baslik);
+
+            final String to = mesaj_email; 
+            final String subject = cevap_baslik;
+            final String messg = cevap_icerik;
+            final String from = "mail@gmail.com";
+            final String pass = "sifre";
+
+            Properties props = new Properties();    
+            props.put("mail.smtp.host", "smtp.gmail.com");    
+            props.put("mail.smtp.socketFactory.port", "465");    
+            props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");    
+            props.put("mail.smtp.auth", "true");    
+            props.put("mail.smtp.port", "465");     
+            Session session = Session.getDefaultInstance(props,    
+            new javax.mail.Authenticator() {    
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {    
+                    return new PasswordAuthentication(from,pass);  
+                }    
+            });       
+            try {    
+               MimeMessage message = new MimeMessage(session);
+               message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));    
+               message.setSubject(subject, "UTF-8");    
+               message.setText(messg, "UTF-8");    
+               Transport.send(message);    
+            } catch (MessagingException e) {throw new RuntimeException(e);
+
+            }        
+            mesajDAO.mesajcevap(mesaj_id);
+            cevapDAO.cevapekle(yenicevap);
+            response.sendRedirect("cevapliste");
+        }    
+    }
+```
+
+SMTP protokolü ile kullanıcının mesajına dönüş yapıyoruz.
+
+## Uçuş oluşturma - Uçak Kontrol
+
+```java
+private void gosterucusolustur(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException {
+        HttpSession session = request.getSession();
+        if ((Integer) session.getAttribute("kullanici_yetki") == null) {
+            response.sendRedirect("giris");
+        } else if ((Integer) session.getAttribute("kullanici_yetki") != 2) {
+            response.sendRedirect("../ucakbileti");
+        } else {
+            int ucus_kalkis_id = Integer.parseInt(request.getParameter("ucus_kalkis_id"));
+            int ucus_varis_id = Integer.parseInt(request.getParameter("ucus_varis_id"));
+            String ucus_tarih = request.getParameter("ucus_tarih");
+            String ucus_saat = request.getParameter("ucus_saat");
+            String ucus_sure = request.getParameter("ucus_sure");
+            int firma_id = Integer.parseInt(request.getParameter("firma_id"));
+            int ucak_id = Integer.parseInt(request.getParameter("ucak_id"));
+            double ucus_ucret = Double.parseDouble(request.getParameter("ucus_ucret"));
+
+            Ucus yeniucus = new Ucus(ucus_kalkis_id, ucus_varis_id, ucus_tarih, ucus_saat, ucus_sure, firma_id, ucak_id, ucus_ucret);
+            Boolean sonuc = ucusDAO.ucuskontrol(yeniucus);
+            if (sonuc == false) {
+                response.sendRedirect("guncelucusliste?durum=basarisiz");
+            } else {
+                ucusDAO.ucusolustur(yeniucus);
+                response.sendRedirect("guncelucusliste");
+            }
+        }
+    }
+```
+
+Aşağıdaki kod satırı ile 
+
+`Boolean sonuc = ucusDAO.ucuskontrol(yeniucus);`
+
+seçilen uçağın belirtilen saatler arasında uçuşu olup olmadığını kontrol ediyoruz. Eğer o saatler arası başka uçuşu yoksa uçuş oluşturma işlemini gerçekleştirecektir.
+
+Eğer başka uçuş varsa
+
+![](./README/ucakkontrol.JPG)
+
+uyarısını verecektir.
+
+## Uçuş Sorgulama
+
+```java
+private void ucussorgulama(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, ServletException, IOException {
+        int havaalani_kalkis_id = Integer.parseInt(request.getParameter("gidis"));
+        int havaalani_varis_id = Integer.parseInt(request.getParameter("varis"));
+        String ucus_tarih = request.getParameter("gidis_tarih");
+        int yetiskin_sayi = Integer.parseInt(request.getParameter("yetiskin"));
+        int cocuk_sayi = Integer.parseInt(request.getParameter("cocuk"));
+
+        Rezervasyon rezervasyon = new Rezervasyon(havaalani_kalkis_id, havaalani_varis_id, ucus_tarih, yetiskin_sayi, cocuk_sayi);
+        request.setAttribute("rezervasyon", rezervasyon);
+        List<Rezervasyon> tekyonsorgula = rezervasyonDAO.tekyonsorgulama(rezervasyon);
+        request.setAttribute("ucussorgulama", tekyonsorgula);
+        List<Havaalani> havaalaniliste = havaalaniDAO.havaalaniliste();
+        request.setAttribute("havaalaniliste", havaalaniliste);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("ucussorgulama.jsp");
+        dispatcher.forward(request, response);
+    }
+```
+
+Kullanıcı bilgileri girdikten sonra uçuş arama işlemini gerçekleştiriyor. Eğer girilen bilgilere uygun uçuş varsa aşağıdaki listelenecektir.
+
+![](./README/ucussorgulama1.JPG)
+
+Girilen bilgilere uygun uçuş yoksa Uçuş Bulunamadı uyarısını alacaklardır.
+
+![](./README/ucussorgulama2.JPG)
+
+Veritabanında sorgulama yapmadan önce girilen bilgilerden tarih değerini kontrol ediyoruz. Eğer uçuşu arattığı tarih bugün ise uçuşa 1 saatten az vakti kalan uçuşlar kullanıcıya listelenmeyecektir. Eğer bugün uçuşu arattığı tarih bugün değil ise o gün içindeki tüm uçuşları listeleyecektir.
+
+Sorgulama yaparken yolcu sayısı uçaklardaki boş koltuk sayısı ile karşılaştırılıp uçakta yer varsa sorgulama sonucu verecektir. Yer yoksa kullanıcılara bu uçuşlar gösterilmeyecektir.
+
+## Rezervasyon oluşturma - Koltuk kontrol
+
+![](./README/rezervasyon1.jpg)
+
+Yukarıdaki rezervasyon oluşturma formunda kullanıcı gerekli tüm bilgileri girdikten sonra aşağıdaki `gosterrezervasyonislemlerim` fonksiyonunu çağırıyor.
+
+```java
+private void gosterrezervasyonislemlerim(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException {
+        HttpSession session = request.getSession();
+        if ((Integer) session.getAttribute("kullanici_yetki") == null) {
+            response.sendRedirect("giris");
+        } else if ((Integer) session.getAttribute("kullanici_yetki") != 1) {
+            response.sendRedirect("ucakbileti");
+        } else {
+            int ucus_id = Integer.parseInt(request.getParameter("ucus_id"));
+            int kullanici_id = (int) session.getAttribute("kullanici_id");
+            String yolcu_email = request.getParameter("yolcu_email");
+            String yolcu_tel = request.getParameter("yolcu_tel");
+            String pnr_no;
+            int c_sayi = Integer.parseInt(request.getParameter("c_sayi"));
+            int y_sayi = Integer.parseInt(request.getParameter("y_sayi"));
+            Double u_ucret = Double.parseDouble(request.getParameter("u_ucret"));
+            int yolcu_tip;
+            String yolcu_ad;
+            String yolcu_soyad;
+            String yolcu_tc;
+            String yolcu_tarih;
+            String yolcu_koltuk;
+            Boolean sonuc = false;
+            for (int i = 1; i <= (c_sayi + y_sayi); i++) {
+                yolcu_koltuk = request.getParameter("yolcu_koltuk" + i);
+                sonuc = rezervasyonDAO.koltukkontrol(ucus_id, yolcu_koltuk);
+            }
+            if (sonuc == true) {
+                response.sendRedirect("rezervasyonislemlerim?durum=basarisiz");
+            } else {
+                for (int i = 1; i <= (c_sayi + y_sayi); i++) {
+                    pnr_no = getAlphaNumericString(8);
+                    yolcu_tip = Integer.parseInt(request.getParameter("yolcu_tip" + i));
+                    yolcu_ad = new String((request.getParameter("yolcu_ad" + i)).getBytes("ISO-8859-1"), "UTF-8");
+                    yolcu_soyad = new String((request.getParameter("yolcu_soyad" + i)).getBytes("ISO-8859-1"), "UTF-8");
+                    yolcu_tc = request.getParameter("yolcu_tc" + i);
+                    yolcu_tarih = request.getParameter("yolcu_tarih" + i);
+                    yolcu_koltuk = request.getParameter("yolcu_koltuk" + i);
+                    Rezervasyon rezervasyon = new Rezervasyon(pnr_no, yolcu_ad, yolcu_soyad, yolcu_email, yolcu_tel, yolcu_tc, yolcu_tip, yolcu_koltuk, kullanici_id, ucus_id, yolcu_tarih, u_ucret);
+                    rezervasyonDAO.rezervasyonekle(rezervasyon);
+                }
+
+                response.sendRedirect("rezervasyonislemlerim?durum=basarili");
+            }
+        }
+    }
+```
+
+Formdaki kullanıcıdan girilen tüm bilgileri ve seçilen koltuk numaralarını alarak kontrol işlemini gerçekleştiriyoruz. Eğer seçilen koltuk başka bir kullanıcı tarafından alınmışsa aşağıdaki uyarıyı verecektir.
+
+![](./README/rezervasyon2.jpg)
+
+Eğer seçilen koltuklar boşsa rezervasyon oluşturma işlemini gerçekleştirecektir.
+
+![](./README/rezervasyon3.jpg)
+
+## Rezervasyon iptal ve Bilgi güncelleme
+
+![](./README/guncelleme.JPG)
+
+Rezervasyon oluşturduktan sonra uçuş süresinden 2 saat önceye kadar uçuşu iptal edebiliriz. 
+
+![](./README/guncelleme1.JPG)
+
+İptal etme işlemini gerçekleştirmek için şifre girmek gerekmektedir.
+
+```java
+private void reziptal(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException {
+        HttpSession session = request.getSession();
+        if ((Integer) session.getAttribute("kullanici_yetki") == null) {
+            response.sendRedirect("giris");
+        } else if ((Integer) session.getAttribute("kullanici_yetki") != 1) {
+            response.sendRedirect("ucakbileti");
+        } else {
+            int rezervasyon_id = Integer.parseInt(request.getParameter("rezervasyon_id"));
+            String kullanici_sifre = (String) session.getAttribute("kullanici_sifre");
+            String sifre = request.getParameter("sil_sifre");
+            if (kullanici_sifre.equals(sifre)) {
+                rezervasyonDAO.rezervasyoniptal(rezervasyon_id);
+                response.sendRedirect("rezervasyonislemlerim?iptal=basarili");
+            } else {
+                response.sendRedirect("rezervasyonislemlerim?iptal=basarisiz");
+            }
+        }
+    }
+```
+
+Eğer şifreyi yanlış girersek
+
+![](./README/guncelleme2.JPG)
+
+uyarısını bize verecektir.
+
+Şifreyi doğru girersek 
+
+![](./README/guncelleme3.JPG)
+
+uyarısını bize verecektir ve rezervasyon işlemini iptal edecektir.
+
+Aynı şekilde uçuş süresinden 2 saat önceye kadar yolcu detayları kısmındaki 
+
+![](./README/guncelleme4.JPG)
+
+Bilgilerimizi de değiştirebiliriz.
+
+![](./README/guncelleme5.JPG)
+
+Eğer uçuşa 2 saatten daha az bir süre kaldıysa görüntü bu şekilde değişecektir.
+
+![](./README/guncelleme6.JPG)
+
+## Logo yükleme
+
+![](./README/logo.JPG)
+
+```java
+private void gosterfirmaekle(HttpServletRequest request, HttpServletResponse response)
+    throws SQLException, IOException, ServletException {
+        HttpSession session = request.getSession();
+        if ((Integer) session.getAttribute("kullanici_yetki") == null) {
+            response.sendRedirect("giris");
+        }else if((Integer) session.getAttribute("kullanici_yetki") != 2){
+            response.sendRedirect("../ucakbileti");
+        }else{
+            String firma_logo = null;
+            String firma_ad = null;
+
+            response.setContentType("text/html; charset=UTF-8");
+
+            boolean isMultipartContent = ServletFileUpload.isMultipartContent(request);
+            if (!isMultipartContent) {
+                return;
+            }
+            FileItemFactory factory = new DiskFileItemFactory();
+            ServletFileUpload upload = new ServletFileUpload(factory);
+            upload.setHeaderEncoding("UTF-8");
+            try {
+                List< FileItem> fields = upload.parseRequest(request);
+                Iterator< FileItem> it = fields.iterator();
+                if (!it.hasNext()) {
+                    return;
+                }
+
+                while (it.hasNext()) {
+                    FileItem fileItem = it.next();
+                    boolean isFormField = fileItem.isFormField();
+                    if (isFormField) {
+                        if (firma_ad == null) {
+                            if (fileItem.getFieldName().equals("firma_ad")) {
+                                firma_ad = fileItem.getString("UTF-8");
+                            }
+                        }
+                    } else {
+                        if (fileItem.getSize() > 0) {
+                            firma_logo = fileItem.getName();
+                            fileItem.write(new File("C:\\Users\\Asus\\Documents\\NetBeansProjects\\hawkeye\\web\\assets\\data\\" + firma_logo));                            
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            Firma yenifirma = new Firma(firma_ad, firma_logo);
+            firmaDAO.firmaekle(yenifirma);
+            response.sendRedirect("firmaliste");
+        }       
+    }   
+```
+
+Aşağıdaki kod satırı ile 
+
+`boolean isMultipartContent = ServletFileUpload.isMultipartContent(request);` 
+
+içerik türünün multipart/form-data olup olmadığını kontrol ediyoruz. Eğer içerik türü multipart/form-data ise logoyu yükleme işlemini gerçekleştiriyoruz.
+
+`fileItem.write(new File("C:\Users\Asus\Documents\NetBeansProjects\hawkeye\web\assets\data\" + firma_logo));`
+
+Logoyu belirttiğimiz dosya yoluna kaydediyoruz.
+
+## Logo silme
+
+![](./README/logo2.JPG)
+
+```java
+private void firmasil(HttpServletRequest request, HttpServletResponse response)
+    throws SQLException, IOException {
+        HttpSession session = request.getSession();
+        if ((Integer) session.getAttribute("kullanici_yetki") == null) {
+            response.sendRedirect("giris");
+        }else if((Integer) session.getAttribute("kullanici_yetki") != 2){
+            response.sendRedirect("../ucakbileti");
+        }else{
+            int firma_id = Integer.parseInt(request.getParameter("id"));
+            String firma_logo = request.getParameter("logo");
+            File f = new File("C:\\Users\\Asus\\Documents\\NetBeansProjects\\hawkeye\\web\\assets\\data\\" + firma_logo);
+            f.delete();
+            firmaDAO.firmasil(firma_id);
+            response.sendRedirect("firmaliste");
+        }        
+}
+```
+
+Aşağıdaki kod satırı ile 
+
+`File f = new File("C:\Users\Asus\Documents\NetBeansProjects\hawkeye\web\assets\data\" + firma_logo);`
+
+silmek istediğimiz dosyanın yolunu belirtiyoruz.
+
+`f.delete();`
+
+Komutu ile dosyanın klasörden silinmesi işlemini gerçekleştiriyoruz.
+
+`firmaDAO.firmasil(firma_id);`
+
+Komutu ile firmayı veritabanından siliyoruz.
