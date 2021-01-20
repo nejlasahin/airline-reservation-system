@@ -210,5 +210,38 @@ Kullanıcıdan gelen anasayfa görüntüleme işleminde eğer görüntülenmek i
 
 ## Kod Parçaları & Ekran Görüntüleri
 
+# Giriş Yapma
 
+```java
+private void gostergiris(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException {
+        HttpSession session = request.getSession();
+        if ((Integer) session.getAttribute("kullanici_yetki") == null) {
+            String kullanici_email = request.getParameter("kullanici_email");
+            String kullanici_sifre = request.getParameter("kullanici_sifre");
+
+            Boolean kontrol = kullaniciDAO.uyegiriskontrol(kullanici_email, kullanici_sifre);
+            if (kontrol == true) {
+                Kullanici uye = kullaniciDAO.uyegiris(kullanici_email, kullanici_sifre);
+                int kullanici_yetki = uye.getKullanici_yetki();
+                String kullanici_ad = uye.getKullanici_ad();
+                String kullanici_soyad = uye.getKullanici_soyad();
+                int kullanici_id = uye.getKullanici_id();
+
+                session.setAttribute("kullanici_id", kullanici_id);
+                session.setAttribute("kullanici_ad", kullanici_ad);
+                session.setAttribute("kullanici_soyad", kullanici_soyad);
+                session.setAttribute("kullanici_email", kullanici_email);
+                session.setAttribute("kullanici_yetki", kullanici_yetki);
+                session.setAttribute("kullanici_sifre", kullanici_sifre);
+
+                response.sendRedirect("ucakbileti");
+            } else {
+                response.sendRedirect("giris?durum=basarisiz");
+            }
+        } else {
+            response.sendRedirect("ucakbileti");
+        }
+    }
+```
 
