@@ -40,13 +40,13 @@ MVC, Model, View ve Controller anlamına gelir.
 
 - **View :** Projenin kullanıcılara sunulacak olan JSP dosyaları yer almaktadır. Bir görevi de, kullanıcılardan alınan istekleri Controller’ a iletmektir.
 
-![](./README/admin-sayfa.JPG)
-
 `Admin Sayfaları`
 
-![](./README/kullanici-sayfa.JPG)
+![](./README/admin-sayfa.JPG)
 
 `Kullanıcı Sayfaları`
+
+![](./README/kullanici-sayfa.JPG)
 
 - **Controller :** Controller, MVC’de projenin iç süreçlerini kontrol eden bölümdür. Bu bölümde View ile Model arasındaki bağlantı kurulur. Kullanıcılardan gelen istekler (request) Controller’larda değerlendirilir, isteğin detayına göre hangi işlemlerin yapılacağı ve kullanıcıya hangi View’ın döneceği (response) belirtilir.
 
