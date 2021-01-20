@@ -33,9 +33,9 @@ Form verileri POST isteğinde alınan, bir dosya veya form öğesine erişim sa�
 Projede MVC mimarisi kullanılmıştır.
 MVC, Model, View ve Controller anlamına gelir.
 
-- Model - DAO : Uygulamada kullanılan verileri temsil eder. Veritabanına erişim, sınıflar, veritabanı ilişkileri gibi veri ile ilgili işlemlerin olduğu bölüm.
+- ** Model - DAO : ** Uygulamada kullanılan verileri temsil eder. Veritabanına erişim, sınıflar, veritabanı ilişkileri gibi veri ile ilgili işlemlerin olduğu bölüm.
 ![](./README/model-dao.JPG)
 
-- View : Projenin kullanıcılara sunulacak olan JSP dosyaları yer almaktadır. Bir görevi de, kullanıcılardan alınan istekleri Controller’ a iletmektir.
+- ** View : ** Projenin kullanıcılara sunulacak olan JSP dosyaları yer almaktadır. Bir görevi de, kullanıcılardan alınan istekleri Controller’ a iletmektir.
 ![](./README/admin-sayfa.JPG)
 ![](./README/kullanici-sayfa.JPG)
