@@ -7,3 +7,4 @@ Bu proje İnternet Mühendisliği dersinde almış olduğum proje ödevim için 
 ### Admin
 
 ### Gerekli Kütüphaneler
+![plot](./README/kutuphaneler.JPG)
