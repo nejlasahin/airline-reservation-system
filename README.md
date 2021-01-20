@@ -1,9 +1,8 @@
 <p align="center">
   <img src="https://github.com/nejlasahin/ucak_rezervasyon_sistemi/blob/master/web/assets/images/logo.png">
+  <h1>Uçak Rezervasyon Sistemi</h1>
+  Bu proje İnternet Mühendisliği dersinde almış olduğum proje ödevim için hazırlanmıştır. 
 </p>
-
-# Uçak Rezervasyon Sistemi
-Bu proje İnternet Mühendisliği dersinde almış olduğum proje ödevim için hazırlanmıştır. 
 
 ---
 
