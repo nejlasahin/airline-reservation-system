@@ -57,7 +57,7 @@ MVC, Model, View ve Controller anlamına gelir.
 
 ## Senaryo (Adminin oluşturulan uçuşlardan birini silmesi)
 
-![](./README/senaryo.png)
+![](./README/senaryo1.png)
 
 View bu değişiklik isteğini algılayıp bunu Controller iletecek.
 
