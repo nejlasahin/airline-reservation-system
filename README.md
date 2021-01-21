@@ -335,7 +335,7 @@ Eğer sistemde kayıtlı bir email adresi kullanarak üye olmaya çalışır ise
 
 ![](./README/mesaj1.JPG)
 
-1. :eye-closed:  mesajın okunup okunmadığı ile ilgidir. Göz ikonunun üstünde slash işareti varsa henüz mesajın okunmadığı anlamına gelir.
+1. :eye_speech_bubble:  mesajın okunup okunmadığı ile ilgidir. Göz ikonunun üstünde slash işareti varsa henüz mesajın okunmadığı anlamına gelir.
 
 2. :x: mesaja cevap verilip verilmediğini belirtir. Çarpı işareti varsa henüz mesaja cevap verilmediği anlamına gelir.
 
