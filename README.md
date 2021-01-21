@@ -258,7 +258,7 @@ Eğer kullanıcı sistemde kayıtlıysa aşağıdaki işlem ile
 
 `kullaniciDAO.uyegiris(kullanici_email, kullanici_sifre);`
 
-kullanıcının bilgilerini veritabanından çekip bu bilgiler ile `setAttribute ` işlemini gerçekleştiriyoruz.
+kullanıcının bilgilerini veritabanından çekip bu bilgiler ile `setAttribute` işlemini gerçekleştiriyoruz.
 
 Eğer sistemde kayıtlı olmayan bir kullanıcı ise Giriş başarısız hatası verecektir.
 
